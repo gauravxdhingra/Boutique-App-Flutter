@@ -54,6 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
       sizes.add(SizeModel.fromDocument(doc));
     });
     print(sizes);
+    customers = [];
+    customerData = {};
     print(snapshot.documents.map((f) {
       customers.add(f.documentID);
       return f.documentID;
@@ -100,9 +102,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : CustomerList(
-              customers: customers,
-              customerData: customerData,
+          : RefreshIndicator(
+              onRefresh: () async {
+                await getCustomers();
+              },
+              child: CustomerList(
+                customers: customers,
+                customerData: customerData,
+              ),
             ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

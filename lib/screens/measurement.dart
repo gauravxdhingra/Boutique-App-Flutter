@@ -87,51 +87,108 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.name),
+        title: Text("Measurements"),
       ),
       body: Container(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(widget.name),
-              Text(widget.customerData[widget.name].desc),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  widget.name,
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+              if (widget.customerData[widget.name].desc != "")
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.customerData[widget.name].desc,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
               if (widget.customerData[widget.name].imageUrl != "" &&
                   widget.customerData[widget.name].imageUrl != null)
-                // CachedNetworkImage(
-                //     imageUrl: widget.customerData[widget.name].imageUrl),
-                Image.network(widget.customerData[widget.name].imageUrl),
-              Text(
-                "Kameez",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                CachedNetworkImage(
+                  imageUrl: widget.customerData[widget.name].imageUrl,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              // Image.network(widget.customerData[widget.name].imageUrl),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                child: Container(
+                  width: double.infinity,
+                  child: Text(
+                    "Kameez".toUpperCase(),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
               for (int i = 0; i < kameezParts.length; i++)
                 MeasurementDisplay(
                   type: kameezParts[i],
                   text: kameezPartsSizes[i],
                 ),
-              Text(
-                "Salwar",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              SizedBox(height: 70),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Container(
+                  width: double.infinity,
+                  child: Text(
+                    "Salwar".toUpperCase(),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
               for (int i = 0; i < salwarParts.length; i++)
                 MeasurementDisplay(
                   type: salwarParts[i],
                   text: salwarPartsSizes[i],
                 ),
-              Text(
-                "Pant",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              SizedBox(height: 70),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Container(
+                  width: double.infinity,
+                  child: Text(
+                    "Pant".toUpperCase(),
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
               for (int i = 0; i < pantParts.length; i++)
                 MeasurementDisplay(
                   type: pantParts[i],
                   text: pantPartsSizes[i],
                 ),
+              SizedBox(height: 70),
             ],
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {},
+          label: Row(
+            children: <Widget>[
+              Icon(Icons.edit),
+              SizedBox(width: 10),
+              Text("Edit"),
+            ],
+          )),
     );
   }
 }
@@ -148,12 +205,31 @@ class MeasurementDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(type),
-        Text(text),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                type,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                text == "" ? "--" : text,
+                style: TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+            ],
+          ),
+          Divider(),
+        ],
+      ),
     );
   }
 }

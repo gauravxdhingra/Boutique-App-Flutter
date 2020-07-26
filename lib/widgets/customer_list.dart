@@ -15,40 +15,40 @@ class CustomerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {},
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.all(10),
-        itemBuilder: (context, i) => Container(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: Card(
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MeasurementScreen(
-                            name: customers[i],
-                            customerData: customerData,
-                          )));
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(customers[i]),
-                      // Text('Description'),
-                    ],
-                  ),
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      itemBuilder: (context, i) => Container(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Card(
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MeasurementScreen(
+                          name: customers[i],
+                          customerData: customerData,
+                        )));
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      customers[i],
+                      style: TextStyle(fontSize: 17),
+                    ),
+                    // Text('Description'),
+                  ],
                 ),
               ),
             ),
           ),
         ),
-        itemCount: customers.length,
       ),
+      itemCount: customers.length,
     );
   }
 }
