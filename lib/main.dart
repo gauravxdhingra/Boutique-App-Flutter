@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sahil_boutique/screens/add_measurement.dart';
 import 'package:sahil_boutique/screens/measurement.dart';
 
+import 'widgets/customer_list.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -59,31 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
       ),
-      body: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemBuilder: (context, i) => Container(
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => MeasurementScreen()));
-            },
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Name'),
-                    Text('Description'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        itemCount: 100,
-      ),
+      body: CustomerList(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context)
