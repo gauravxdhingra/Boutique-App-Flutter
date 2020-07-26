@@ -84,55 +84,66 @@ class _MyHomePageState extends State<MyHomePage> {
           ? Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.only(top: 12.0),
-              child: FloatingSearchBar.builder(
-                pinned: true,
-                controller: _searchController,
-                itemCount: searchResults.length,
-                // padding: EdgeInsets.all(0),
-                itemBuilder: (context, i) => ListTile(
-                  title: Text(
-                    searchResults[i],
-                    // style:
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MeasurementScreen(
-                              name: customers[i],
-                              customerData: customerData,
-                            )));
-                  },
-                ),
-                leading: Icon(
-                  Icons.search,
-                  // color:
-                ),
-                trailing: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        // color:
-                      ),
-                      onPressed: () {
-                        _searchController.clear();
-                        searchResults = [];
-                        searchResults = customers;
-                        setState(() {});
-                      }),
-                ),
-                onChanged: (String value) async {
-                  if (value == '') {
-                    searchResults = customers;
-                  } else
-                    searchResults = customers.where((test) {
-                      return test.toLowerCase().contains(value.toLowerCase());
-                    }).toList();
-                  print(searchResults);
-                  setState(() {});
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await getCustomers();
                 },
-
-                decoration: InputDecoration.collapsed(
-                  hintText: "Search",
+                child: FloatingSearchBar.builder(
+                  pinned: true,
+                  controller: _searchController,
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, i) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Text(
+                          searchResults[i][0],
+                        ),
+                      ),
+                      title: Text(
+                        searchResults[i],
+                        // style:
+                      ),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MeasurementScreen(
+                                  name: customers[i],
+                                  customerData: customerData,
+                                )));
+                      },
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.search,
+                    // color:
+                  ),
+                  trailing: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.clear,
+                          // color:
+                        ),
+                        onPressed: () {
+                          _searchController.clear();
+                          searchResults = [];
+                          searchResults = customers;
+                          setState(() {});
+                        }),
+                  ),
+                  onChanged: (String value) async {
+                    if (value == '') {
+                      searchResults = customers;
+                    } else
+                      searchResults = customers.where((test) {
+                        return test.toLowerCase().contains(value.toLowerCase());
+                      }).toList();
+                    print(searchResults);
+                    setState(() {});
+                  },
+                  decoration: InputDecoration.collapsed(
+                    hintText: "Search",
+                  ),
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sahil_boutique/models/size_model.dart';
 import 'package:sahil_boutique/screens/add_measurement.dart';
@@ -13,7 +14,7 @@ class MeasurementScreen extends StatefulWidget {
 
 class _MeasurementScreenState extends State<MeasurementScreen> {
   List<String> customers = [];
-
+  final usersRef = Firestore.instance.collection('customers');
   List<String> kameezParts = [
     "Length",
     "Chest",
@@ -179,6 +180,24 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                   type: pantParts[i],
                   text: pantPartsSizes[i],
                 ),
+              SizedBox(height: 70),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Container(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () async {
+                      await usersRef.document(widget.name).delete();
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(height: 70),
             ],
           ),
