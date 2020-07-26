@@ -16,7 +16,7 @@ class CustomerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: BouncingScrollPhysics(),
+      // physics: BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       itemBuilder: (context, i) => Container(
         child: Padding(

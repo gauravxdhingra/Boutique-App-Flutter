@@ -39,10 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<String> customers = [];
   Map<String, SizeModel> customerData = {};
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     getCustomers();
     super.initState();
   }
@@ -77,7 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: !_isSearch ? Text(widget.title) : TextField(),
+        title: !_isSearch
+            ? Text(widget.title)
+            : TextFormField(
+                controller: _searchController,
+                onChanged: (String tag){
+                  
+                },
+
+              ),
         actions: _isSearch
             ? <Widget>[
                 IconButton(

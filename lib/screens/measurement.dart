@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sahil_boutique/models/size_model.dart';
+import 'package:sahil_boutique/screens/add_measurement.dart';
 
 class MeasurementScreen extends StatefulWidget {
   MeasurementScreen({Key key, this.name, this.customerData}) : super(key: key);
@@ -11,6 +12,8 @@ class MeasurementScreen extends StatefulWidget {
 }
 
 class _MeasurementScreenState extends State<MeasurementScreen> {
+  List<String> customers = [];
+
   List<String> kameezParts = [
     "Length",
     "Chest",
@@ -44,6 +47,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   @override
   void initState() {
     makeList();
+    customers = widget.customerData.keys.toList();
     super.initState();
   }
 
@@ -181,7 +185,16 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddMeasurement(
+                          customers: customers,
+                          name: widget.name,
+                          size: widget.customerData[widget.name],
+                        )));
+          },
           label: Row(
             children: <Widget>[
               Icon(Icons.edit),

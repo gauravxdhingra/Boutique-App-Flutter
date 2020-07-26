@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,11 @@ import 'package:sahil_boutique/models/size_model.dart';
 import 'package:image/image.dart' as im;
 
 class AddMeasurement extends StatefulWidget {
-  AddMeasurement({Key key, this.customers}) : super(key: key);
+  AddMeasurement({Key key, this.customers, this.size, this.name})
+      : super(key: key);
   final List<String> customers;
+  final SizeModel size;
+  final String name;
 
   @override
   _AddMeasurementState createState() => _AddMeasurementState();
@@ -23,7 +27,8 @@ class _AddMeasurementState extends State<AddMeasurement> {
   final usersRef = Firestore.instance.collection('customers');
   bool isUploading = false;
 
-  TextEditingController nameController, descController;
+  TextEditingController nameController = TextEditingController(),
+      descController = TextEditingController();
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -41,8 +46,6 @@ class _AddMeasurementState extends State<AddMeasurement> {
   void initState() {
     super.initState();
     manageTextEditingControllers();
-    nameController = TextEditingController();
-    descController = TextEditingController();
   }
 
   @override
@@ -100,13 +103,29 @@ class _AddMeasurementState extends State<AddMeasurement> {
                     //
                     SizedBox(height: 25),
                     _image == null
-                        ? Container(
-                            width: MediaQuery.of(context).size.width - 30,
-                            child: Text(
-                              'No Image Selected !',
-                              textAlign: TextAlign.center,
-                            ),
-                          )
+                        ? widget.size == null
+                            ? Container(
+                                width: MediaQuery.of(context).size.width - 30,
+                                child: Text(
+                                  'No Image Selected !',
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: widget.size.imageUrl,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 10,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              )
                         : Image.file(_image),
                     SizedBox(height: 10),
                     Container(
@@ -346,11 +365,14 @@ class _AddMeasurementState extends State<AddMeasurement> {
     );
   }
 
+  String mediaUrl;
+
   submit(SizeModel size) async {
+    mediaUrl = widget.size == null ? "" : widget.size.imageUrl;
+
     setState(() {
       isUploading = true;
     });
-    String mediaUrl = "";
 
     if (_image != null) {
       await compressImage();
@@ -361,7 +383,9 @@ class _AddMeasurementState extends State<AddMeasurement> {
       _image = null;
       isUploading = false;
     });
-    saveInFirebase(nameController.text, mediaUrl);
+    await saveInFirebase(nameController.text, mediaUrl);
+
+    Navigator.of(context).pop();
   }
 
   final StorageReference storageRef = FirebaseStorage.instance.ref();
@@ -381,7 +405,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
     print(nameCap);
     DocumentSnapshot doc = await usersRef.document(nameCap).get();
     // DocumentSnapshot doc = await usersRef.document(user.id).get();
-    if (!doc.exists) {
+    if (!doc.exists || widget.size != null) {
       await usersRef.document(nameCap).setData({
         "lengthKamiz": size.lengthKamiz,
         "chestKamiz": size.chestKamiz,
@@ -481,6 +505,35 @@ class _AddMeasurementState extends State<AddMeasurement> {
       chainPantController,
       pocketsPantController
     ];
+
+    if (widget.size != null) {
+      lengthKameezController.text = widget.size.lengthKamiz;
+      chestKameezController.text = widget.size.chestKamiz;
+      waistKameezController.text = widget.size.kamarKamiz;
+      hipKameezController.text = widget.size.hipKamiz;
+      gheraKameezController.text = widget.size.gheraKamiz;
+      baajuKameezController.text = widget.size.baajuKamiz;
+      baajuMoriKameezController.text = widget.size.baajuMoriKamiz;
+      armolKameezController.text = widget.size.armolKamiz;
+      neckFrontKameezController.text = widget.size.neckFrontKamiz;
+      neckBackKameezController.text = widget.size.neckBackKamiz;
+
+      lengthSalwarController.text = widget.size.lengthSalwar;
+      moriSalwarController.text = widget.size.moriSalwar;
+      beltSalwarController.text = widget.size.beltSalwar;
+
+      lengthPantController.text = widget.size.lengthPant;
+      moriPantController.text = widget.size.moriPant;
+      kneePantController.text = widget.size.kneePant;
+      thighPantController.text = widget.size.thighPant;
+      kamarPantController.text = widget.size.kamarPant;
+      beltPantController.text = widget.size.beltPant;
+      chainPantController.text = widget.size.chainPant;
+      pocketsPantController.text = widget.size.pocketsPant;
+
+      nameController.text = widget.name;
+      descController.text = widget.size.desc;
+    }
   }
 
   List<String> kameezParts = [
