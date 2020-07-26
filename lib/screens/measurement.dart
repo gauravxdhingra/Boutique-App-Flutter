@@ -132,14 +132,16 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.only(right: 6),
-                child: Text(
-                  'Pinch To Zoom Image',
-                  textAlign: TextAlign.right,
+              if (widget.customerData[widget.name].imageUrl != "" &&
+                  widget.customerData[widget.name].imageUrl != null)
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(right: 6),
+                  child: Text(
+                    'Pinch To Zoom Image',
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-              ),
               // Image.network(widget.customerData[widget.name].imageUrl),
               Padding(
                 padding: const EdgeInsets.only(top: 50.0, bottom: 20),

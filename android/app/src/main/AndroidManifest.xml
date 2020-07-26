@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="sahil_boutique"
+        android:label="Sahil Boutique"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

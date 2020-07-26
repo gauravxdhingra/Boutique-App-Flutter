@@ -353,7 +353,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                         );
                         await submit(size);
                         // Navigator.pop(context);
-
+                        if (size != null) Navigator.pop(context);
                         Navigator.pop(context);
                         setState(() {});
                       }
