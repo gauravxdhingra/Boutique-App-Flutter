@@ -38,91 +38,107 @@ class _AddMeasurementState extends State<AddMeasurement> {
       appBar: AppBar(
         title: Text('Add New Measurement'),
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("Name"),
-                TextFormField(),
-                Text("Description"),
-                TextFormField(),
-                //
-                //
-                //
-                Text(
-                  "Kameez",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                ),
-                for (int i = 0; i < kameezParts.length; i++)
-                  BuildInputBox(
-                    part: kameezParts[i],
-                    controller: kameezControllers[i],
-                  ),
-                Divider(),
-                //
-                //
-                //
-                Text(
-                  "Salwar",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                ),
-                for (int i = 0; i < salwarParts.length; i++)
-                  BuildInputBox(
-                    part: salwarParts[i],
-                    controller: salwarControllers[i],
-                  ),
-                Divider(),
-                //
-                //
-                //
-                Text(
-                  "Pant",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                ),
-                for (int i = 0; i < pantParts.length; i++)
-                  BuildInputBox(
-                    part: pantParts[i],
-                    controller: pantControllers[i],
-                  ),
-                Divider(),
-                //
-                //
-                //
-                _image == null
-                    ? Text('No image selected.')
-                    : Image.file(_image),
-                RaisedButton(
-                  onPressed: () {
-                    getImage();
-                  },
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.add_photo_alternate,
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Name"),
+                    TextFormField(),
+                    Text("Description"),
+                    TextFormField(),
+                    //
+                    //
+                    //
+                    _image == null
+                        ? Text('No image selected.')
+                        : Image.file(_image),
+                    RaisedButton(
+                      onPressed: () {
+                        getImage();
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.add_photo_alternate,
+                          ),
+                          Text(_image == null ? 'Add Photo' : "Change Photo"),
+                        ],
                       ),
-                      Text(_image == null ? 'Add Photo' : "Change Photo"),
-                    ],
-                  ),
-                ),
-                RaisedButton(
-                  onPressed: () {},
-                  child: Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.save,
+                    ),
+                    //
+                    //
+                    //
+                    Text(
+                      "Kameez",
+                      style:
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    ),
+                    for (int i = 0; i < kameezParts.length; i++)
+                      BuildInputBox(
+                        part: kameezParts[i],
+                        controller: kameezControllers[i],
                       ),
-                      Text('Save'),
-                    ],
-                  ),
+                    Divider(),
+                    //
+                    //
+                    //
+                    Text(
+                      "Salwar",
+                      style:
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    ),
+                    for (int i = 0; i < salwarParts.length; i++)
+                      BuildInputBox(
+                        part: salwarParts[i],
+                        controller: salwarControllers[i],
+                      ),
+                    Divider(),
+                    //
+                    //
+                    //
+                    Text(
+                      "Pant",
+                      style:
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    ),
+                    for (int i = 0; i < pantParts.length; i++)
+                      BuildInputBox(
+                        part: pantParts[i],
+                        controller: pantControllers[i],
+                      ),
+                    Divider(),
+                    //
+                    //
+                    //
+
+                    SizedBox(height: 100),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 70,
+              child: RaisedButton(
+                color: Theme.of(context).primaryColor,
+                onPressed: () {},
+                child: Text(
+                  'SAVE',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
