@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sahil_boutique/screens/measurement.dart';
+
+import '../screens/measurement.dart';
 
 class CustomerList extends StatelessWidget {
   const CustomerList({

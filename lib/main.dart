@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sahil_boutique/screens/add_measurement.dart';
-import 'package:sahil_boutique/screens/measurement.dart';
 
+import 'screens/add_measurement.dart';
 import 'widgets/customer_list.dart';
 
 void main() {
