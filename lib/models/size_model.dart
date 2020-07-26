@@ -12,7 +12,23 @@ class SizeModel {
   final String neckFrontKamiz;
   final String neckBackKamiz;
 
+  final String lengthSalwar;
+  final String moriSalwar;
+  final String beltSalwar;
+
+  final String lengthPant;
+  final String moriPant;
+  final String kneePant;
+  final String thighPant;
+  final String kamarPant;
+  final String beltPant;
+  final String chainPant;
+  final String pocketsPant;
+
+  final String imageUrl;
+
   SizeModel({
+    this.imageUrl,
     this.lengthKamiz,
     this.chestKamiz,
     this.kamarKamiz,
@@ -23,20 +39,43 @@ class SizeModel {
     this.armolKamiz,
     this.neckFrontKamiz,
     this.neckBackKamiz,
+    this.lengthSalwar,
+    this.moriSalwar,
+    this.beltSalwar,
+    this.lengthPant,
+    this.moriPant,
+    this.kneePant,
+    this.thighPant,
+    this.kamarPant,
+    this.beltPant,
+    this.chainPant,
+    this.pocketsPant,
   });
 
   factory SizeModel.fromDocument(DocumentSnapshot doc) {
     return SizeModel(
-      lengthKamiz: doc["length"],
-      chestKamiz: doc["chest"],
-      kamarKamiz: doc["kamar"],
-      hipKamiz: doc["hip"],
-      gheraKamiz: doc["ghera"],
-      baajuKamiz: doc["baaju"],
-      baajuMoriKamiz: doc["baajuMori"],
-      armolKamiz: doc["armol"],
-      neckFrontKamiz: doc["neckFront"],
-      neckBackKamiz: doc["neckBack"],
+      lengthKamiz: doc["lengthKamiz"],
+      chestKamiz: doc["chestKamiz"],
+      kamarKamiz: doc["kamarKamiz"],
+      hipKamiz: doc["hipKamiz"],
+      gheraKamiz: doc["gheraKamiz"],
+      baajuKamiz: doc["baajuKamiz"],
+      baajuMoriKamiz: doc["baajuMoriKamiz"],
+      armolKamiz: doc["armolKamiz"],
+      neckFrontKamiz: doc["neckFrontKamiz"],
+      neckBackKamiz: doc["neckBackKamiz"],
+      lengthSalwar: doc["lengthSalwar"],
+      moriSalwar: doc["moriSalwar"],
+      beltSalwar: doc["beltSalwar"],
+      lengthPant: doc["lengthPant"],
+      moriPant: doc["moriPant"],
+      kneePant: doc["kneePant"],
+      thighPant: doc["thighPant"],
+      kamarPant: doc["kamarPant"],
+      beltPant: doc["beltPant"],
+      chainPant: doc["chainPant"],
+      pocketsPant: doc["pocketsPant"],
+      imageUrl: doc["imageUrl"],
     );
   }
 }

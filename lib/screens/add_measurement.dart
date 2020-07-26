@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sahil_boutique/models/size_model.dart';
 
 class AddMeasurement extends StatefulWidget {
   AddMeasurement({Key key}) : super(key: key);
@@ -180,6 +182,46 @@ class _AddMeasurementState extends State<AddMeasurement> {
         ],
       ),
     );
+  }
+
+  SizeModel size;
+
+  final usersRef = Firestore.instance.collection('customers');
+
+  saveInFirebase(String name) async {
+    // check if user exists in users collection in database(acc to their id)
+
+    DocumentSnapshot doc = await usersRef.document(name).get();
+    // DocumentSnapshot doc = await usersRef.document(user.id).get();
+    if (!doc.exists) {
+      await usersRef.document(name).setData({
+        "lengthKamiz": size.lengthKamiz,
+        "chestKamiz": size.chestKamiz,
+        "kamarKamiz": size.kamarKamiz,
+        "hipKamiz": size.hipKamiz,
+        "gheraKamiz": size.gheraKamiz,
+        "baajuKamiz": size.baajuKamiz,
+        "baajuMoriKamiz": size.baajuMoriKamiz,
+        "armolKamiz": size.armolKamiz,
+        "neckFrontKamiz": size.neckFrontKamiz,
+        "neckBackKamiz": size.neckBackKamiz,
+        "lengthSalwar": size.lengthSalwar,
+        "moriSalwar": size.moriSalwar,
+        "beltSalwar": size.beltSalwar,
+        "lengthPant": size.lengthPant,
+        "moriPant": size.moriPant,
+        "kneePant": size.kneePant,
+        "thighPant": size.thighPant,
+        "kamarPant": size.kamarPant,
+        "beltPant": size.beltPant,
+        "chainPant": size.chainPant,
+        "pocketsPant": size.pocketsPant,
+        "imageUrl": size.imageUrl,
+      });
+      doc = await usersRef.document(name).get();
+    }
+    SizeModel sizee = SizeModel.fromDocument(doc);
+    print(sizee);
   }
 
   manageTextEditingControllers() {
