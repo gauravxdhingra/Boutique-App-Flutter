@@ -186,6 +186,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                       style:
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(height: 10),
                     for (int i = 0; i < kameezParts.length; i++)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,6 +209,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                           ),
                         ],
                       ),
+                    SizedBox(height: 50),
                     // BuildInputBox(
                     //   part: kameezParts[i],
                     //   controller: kameezControllers[i],
@@ -221,6 +223,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                       style:
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(height: 10),
                     for (int i = 0; i < salwarParts.length; i++)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,6 +246,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                           ),
                         ],
                       ),
+                    SizedBox(height: 50),
                     Divider(),
                     //
                     //
@@ -252,6 +256,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                       style:
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(height: 10),
                     for (int i = 0; i < pantParts.length; i++)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -350,6 +355,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                         // Navigator.pop(context);
 
                         Navigator.pop(context);
+                        setState(() {});
                       }
                     : null,
                 child: Text(

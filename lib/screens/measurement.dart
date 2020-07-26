@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pinch_zoom_image/pinch_zoom_image.dart';
 import 'package:sahil_boutique/models/size_model.dart';
 import 'package:sahil_boutique/screens/add_measurement.dart';
 
@@ -117,21 +118,31 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                 ),
               if (widget.customerData[widget.name].imageUrl != "" &&
                   widget.customerData[widget.name].imageUrl != null)
-                CachedNetworkImage(
-                  imageUrl: widget.customerData[widget.name].imageUrl,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Container(
-                    height: MediaQuery.of(context).size.height / 2,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                          value: downloadProgress.progress),
+                PinchZoomImage(
+                  image: CachedNetworkImage(
+                    imageUrl: widget.customerData[widget.name].imageUrl,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                            value: downloadProgress.progress),
+                      ),
                     ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.only(right: 6),
+                child: Text(
+                  'Pinch To Zoom Image',
+                  textAlign: TextAlign.right,
+                ),
+              ),
               // Image.network(widget.customerData[widget.name].imageUrl),
               Padding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                padding: const EdgeInsets.only(top: 50.0, bottom: 20),
                 child: Container(
                   width: double.infinity,
                   child: Text(
@@ -190,6 +201,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                     onPressed: () async {
                       await usersRef.document(widget.name).delete();
                       Navigator.pop(context);
+                      setState(() {});
                     },
                     child: Text(
                       'Delete',

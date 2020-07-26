@@ -75,6 +75,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getCustomers();
+    print("**********************");
+  }
+
   List<String> searchResults = [];
 
   @override
@@ -121,16 +128,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     backgroundColor: Colors.transparent,
                     child: IconButton(
                         icon: Icon(
-                          Icons.clear,
+                          _searchController.text == ""
+                              ? Icons.refresh
+                              : Icons.clear,
                           // color:
                         ),
-                        onPressed: () {
-                          _searchController.clear();
-                          searchResults = [];
-                          searchResults = customers;
-                          setState(() {});
-                        }),
+                        onPressed: _searchController.text == ""
+                            ? () async {
+                                await getCustomers();
+                                setState(() {});
+                              }
+                            : () {
+                                _searchController.clear();
+                                searchResults = [];
+                                searchResults = customers;
+                                setState(() {});
+                              }),
                   ),
+                  endDrawer: Text('hah'),
                   onChanged: (String value) async {
                     if (value == '') {
                       searchResults = customers;
