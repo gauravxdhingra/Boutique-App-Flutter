@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sahil_boutique/screens/add_measurement.dart';
 
 void main() {
   runApp(MyApp());
@@ -68,13 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
+        child: ListView.builder(
+          itemBuilder: (context, i) => Container(
+            child: Text(i.toString()),
+          ),
+          itemCount: 10,
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AddMeasurement()));
+        },
         tooltip: 'Increment',
         icon: Icon(Icons.add),
         label: Text('Add New'),

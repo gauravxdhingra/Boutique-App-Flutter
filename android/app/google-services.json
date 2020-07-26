@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "186220274731",
+    "firebase_url": "https://sahil-boutique.firebaseio.com",
+    "project_id": "sahil-boutique",
+    "storage_bucket": "sahil-boutique.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:186220274731:android:491d47407469325074766e",
+        "android_client_info": {
+          "package_name": "com.gauravxdhingra.sahilboutique"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "186220274731-h7o46p9eq71aqeuqqqrgp1vdv90jorab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gauravxdhingra.sahilboutique",
+            "certificate_hash": "4145b6591c2b4bc5d84dd4325fb52e47f069bff7"
+          }
+        },
+        {
+          "client_id": "186220274731-18rra4i0q5qed5fb38rck366p9sq80fb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqFqDGJMg1RNWqpE4TSD7oqD20Xqh76W0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "186220274731-18rra4i0q5qed5fb38rck366p9sq80fb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
