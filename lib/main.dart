@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'screens/add_measurement.dart';
 import 'widgets/customer_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,6 +33,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _isSearch = false;
+  final usersRef = Firestore.instance.collection('customers');
+
+  List<String> customers = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getCustomers();
+    super.initState();
+  }
+
+  getCustomers() async {
+    QuerySnapshot snapshot = await usersRef.getDocuments();
+    print(snapshot.documents.map((f) {
+      customers.add(f.documentID);
+      return f.documentID;
+    }));
+    // snapshot.documents.forEach((doc) {
+    //   // customers.add(doc.data.keys.first);
+    // });
+    print(customers);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
       ),
-      body: CustomerList(),
+      body: CustomerList(
+        customers: customers,
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context)

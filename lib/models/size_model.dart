@@ -26,9 +26,9 @@ class SizeModel {
   final String pocketsPant;
 
   final String imageUrl;
+  final String desc;
 
   SizeModel({
-    this.imageUrl,
     this.lengthKamiz,
     this.chestKamiz,
     this.kamarKamiz,
@@ -50,6 +50,8 @@ class SizeModel {
     this.beltPant,
     this.chainPant,
     this.pocketsPant,
+    this.imageUrl,
+    this.desc,
   });
 
   factory SizeModel.fromDocument(DocumentSnapshot doc) {
@@ -76,6 +78,7 @@ class SizeModel {
       chainPant: doc["chainPant"],
       pocketsPant: doc["pocketsPant"],
       imageUrl: doc["imageUrl"],
+      desc: doc["desc"],
     );
   }
 }

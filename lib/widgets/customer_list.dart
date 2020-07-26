@@ -5,7 +5,10 @@ import '../screens/measurement.dart';
 class CustomerList extends StatelessWidget {
   const CustomerList({
     Key key,
+    this.customers,
   }) : super(key: key);
+
+  final List<String> customers;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,9 @@ class CustomerList extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MeasurementScreen()));
+                      builder: (context) => MeasurementScreen(
+                            name: customers[i],
+                          )));
                 },
                 child: Padding(
                   padding:
@@ -29,8 +34,8 @@ class CustomerList extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Name'),
-                      Text('Description'),
+                      Text(customers[i]),
+                      // Text('Description'),
                     ],
                   ),
                 ),
@@ -38,7 +43,7 @@ class CustomerList extends StatelessWidget {
             ),
           ),
         ),
-        itemCount: 20,
+        itemCount: customers.length,
       ),
     );
   }

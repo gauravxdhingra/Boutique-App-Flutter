@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MeasurementScreen extends StatefulWidget {
-  MeasurementScreen({Key key}) : super(key: key);
+  MeasurementScreen({Key key, this.name}) : super(key: key);
+  final String name;
 
   @override
   _MeasurementScreenState createState() => _MeasurementScreenState();
@@ -12,7 +13,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Name'),
+        title: Text(widget.name),
       ),
       body: Container(
         child: Column(

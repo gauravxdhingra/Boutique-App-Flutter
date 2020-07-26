@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sahil_boutique/models/size_model.dart';
+import 'package:image/image.dart' as im;
 
 class AddMeasurement extends StatefulWidget {
   AddMeasurement({Key key}) : super(key: key);
@@ -15,6 +18,11 @@ class AddMeasurement extends StatefulWidget {
 class _AddMeasurementState extends State<AddMeasurement> {
   File _image;
   final picker = ImagePicker();
+  SizeModel size;
+  final usersRef = Firestore.instance.collection('customers');
+  bool isUploading = false;
+
+  TextEditingController nameController, descController;
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -24,14 +32,16 @@ class _AddMeasurementState extends State<AddMeasurement> {
     });
   }
 
-  List<TextEditingController> kameezControllers;
-  List<TextEditingController> salwarControllers;
-  List<TextEditingController> pantControllers;
+  List<TextEditingController> kameezControllers = [];
+  List<TextEditingController> salwarControllers = [];
+  List<TextEditingController> pantControllers = [];
 
   @override
   void initState() {
     super.initState();
     manageTextEditingControllers();
+    nameController = TextEditingController();
+    descController = TextEditingController();
   }
 
   @override
@@ -54,6 +64,10 @@ class _AddMeasurementState extends State<AddMeasurement> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        controller: nameController,
+                        onChanged: (String str) {
+                          setState(() {});
+                        },
                         decoration: InputDecoration(
                           labelText: "Name",
                           fillColor: Colors.white,
@@ -68,6 +82,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        controller: descController,
                         maxLines: 3,
                         decoration: InputDecoration(
                           labelText: "Description",
@@ -109,6 +124,14 @@ class _AddMeasurementState extends State<AddMeasurement> {
                                 color: Colors.white,
                               ),
                             ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _image = null;
+                                });
+                              },
+                              child: Text('Remove'),
+                            ),
                           ],
                         ),
                       ),
@@ -123,10 +146,31 @@ class _AddMeasurementState extends State<AddMeasurement> {
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
                     for (int i = 0; i < kameezParts.length; i++)
-                      BuildInputBox(
-                        part: kameezParts[i],
-                        controller: kameezControllers[i],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          // Text(widget.part),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width - 30,
+                            child: TextFormField(
+                              controller: kameezControllers[i],
+                              decoration: InputDecoration(
+                                labelText: kameezParts[i],
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(25.0),
+                                  borderSide: new BorderSide(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    // BuildInputBox(
+                    //   part: kameezParts[i],
+                    //   controller: kameezControllers[i],
+                    // ),
                     Divider(),
                     //
                     //
@@ -137,9 +181,26 @@ class _AddMeasurementState extends State<AddMeasurement> {
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
                     for (int i = 0; i < salwarParts.length; i++)
-                      BuildInputBox(
-                        part: salwarParts[i],
-                        controller: salwarControllers[i],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          // Text(widget.part),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width - 30,
+                            child: TextFormField(
+                              controller: salwarControllers[i],
+                              decoration: InputDecoration(
+                                labelText: salwarParts[i],
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(25.0),
+                                  borderSide: new BorderSide(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     Divider(),
                     //
@@ -151,9 +212,26 @@ class _AddMeasurementState extends State<AddMeasurement> {
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
                     for (int i = 0; i < pantParts.length; i++)
-                      BuildInputBox(
-                        part: pantParts[i],
-                        controller: pantControllers[i],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          // Text(widget.part),
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            width: MediaQuery.of(context).size.width - 30,
+                            child: TextFormField(
+                              controller: pantControllers[i],
+                              decoration: InputDecoration(
+                                labelText: pantParts[i],
+                                fillColor: Colors.white,
+                                border: new OutlineInputBorder(
+                                  borderRadius: new BorderRadius.circular(25.0),
+                                  borderSide: new BorderSide(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     //
                     //
@@ -171,7 +249,60 @@ class _AddMeasurementState extends State<AddMeasurement> {
               height: 70,
               child: RaisedButton(
                 color: Theme.of(context).primaryColor,
-                onPressed: () {},
+                onPressed: (nameController.text != "")
+                    ? () async {
+                        showDialog<void>(
+                          context: context,
+                          barrierDismissible: false, // user must tap button!
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Saving'),
+                              content: SingleChildScrollView(
+                                child: Text('Please wait for a few seconds!'),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    return;
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        size = SizeModel(
+                          lengthKamiz: lengthKameezController.text,
+                          chestKamiz: chestKameezController.text,
+                          kamarKamiz: waistKameezController.text,
+                          hipKamiz: hipKameezController.text,
+                          gheraKamiz: gheraKameezController.text,
+                          baajuKamiz: baajuKameezController.text,
+                          baajuMoriKamiz: baajuMoriKameezController.text,
+                          armolKamiz: armolKameezController.text,
+                          neckBackKamiz: neckBackKameezController.text,
+                          neckFrontKamiz: neckFrontKameezController.text,
+                          lengthSalwar: lengthSalwarController.text,
+                          moriSalwar: moriSalwarController.text,
+                          beltSalwar: beltSalwarController.text,
+                          lengthPant: lengthPantController.text,
+                          moriPant: moriPantController.text,
+                          kneePant: kneePantController.text,
+                          thighPant: thighPantController.text,
+                          kamarPant: kamarPantController.text,
+                          beltPant: beltPantController.text,
+                          chainPant: chainPantController.text,
+                          pocketsPant: pocketsPantController.text,
+                          imageUrl: "",
+                          desc: descController.text,
+                        );
+                        await submit(size);
+                        Navigator.pop(context);
+
+                        Navigator.pop(context);
+                      }
+                    : null,
                 child: Text(
                   'SAVE',
                   style: TextStyle(fontSize: 20, color: Colors.white),
@@ -181,16 +312,41 @@ class _AddMeasurementState extends State<AddMeasurement> {
           ),
         ],
       ),
+      // key: _scaffoldKey,
     );
   }
 
-  SizeModel size;
+  submit(SizeModel size) async {
+    setState(() {
+      isUploading = true;
+    });
+    String mediaUrl = "";
 
-  final usersRef = Firestore.instance.collection('customers');
+    if (_image != null) {
+      await compressImage();
+      mediaUrl = await uploadImage(_image, nameController.text);
+    }
 
-  saveInFirebase(String name) async {
+    setState(() {
+      _image = null;
+      isUploading = false;
+    });
+    saveInFirebase(nameController.text, mediaUrl);
+  }
+
+  final StorageReference storageRef = FirebaseStorage.instance.ref();
+
+  Future<String> uploadImage(file, name) async {
+    StorageUploadTask uploadTask = storageRef
+        .child('$name${DateTime.now().toIso8601String()}.jpg')
+        .putFile(file);
+    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+    String downloadUrl = await storageSnap.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  saveInFirebase(String name, String mediaUrl) async {
     // check if user exists in users collection in database(acc to their id)
-
     DocumentSnapshot doc = await usersRef.document(name).get();
     // DocumentSnapshot doc = await usersRef.document(user.id).get();
     if (!doc.exists) {
@@ -216,12 +372,30 @@ class _AddMeasurementState extends State<AddMeasurement> {
         "beltPant": size.beltPant,
         "chainPant": size.chainPant,
         "pocketsPant": size.pocketsPant,
-        "imageUrl": size.imageUrl,
+        "imageUrl": mediaUrl,
+        "desc": size.desc,
       });
       doc = await usersRef.document(name).get();
     }
     SizeModel sizee = SizeModel.fromDocument(doc);
     print(sizee);
+  }
+
+  compressImage() async {
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    im.Image imageFile = im.decodeImage(_image.readAsBytesSync());
+    final compressedImageFile =
+        File('$path/img_${DateTime.now().toIso8601String()}.jpg')
+          ..writeAsBytesSync(
+            im.encodeJpg(
+              imageFile,
+              quality: 85,
+            ),
+          );
+    setState(() {
+      _image = compressedImageFile;
+    });
   }
 
   manageTextEditingControllers() {
@@ -252,18 +426,6 @@ class _AddMeasurementState extends State<AddMeasurement> {
       chainPantController,
       pocketsPantController
     ];
-
-    for (int i = 0; i < kameezControllers.length; i++) {
-      kameezControllers[i] = TextEditingController();
-    }
-
-    for (int i = 0; i < salwarControllers.length; i++) {
-      salwarControllers[i] = TextEditingController();
-    }
-
-    for (int i = 0; i < pantControllers.length; i++) {
-      pantControllers[i] = TextEditingController();
-    }
   }
 
   List<String> kameezParts = [
@@ -296,27 +458,27 @@ class _AddMeasurementState extends State<AddMeasurement> {
     "Pockets"
   ];
 
-  TextEditingController lengthKameezController,
-      chestKameezController,
-      waistKameezController,
-      hipKameezController,
-      gheraKameezController,
-      baajuKameezController,
-      baajuMoriKameezController,
-      armolKameezController,
-      neckFrontKameezController,
-      neckBackKameezController,
-      lengthSalwarController,
-      moriSalwarController,
-      beltSalwarController,
-      lengthPantController,
-      moriPantController,
-      kneePantController,
-      thighPantController,
-      kamarPantController,
-      beltPantController,
-      chainPantController,
-      pocketsPantController;
+  TextEditingController lengthKameezController = TextEditingController(),
+      chestKameezController = TextEditingController(),
+      waistKameezController = TextEditingController(),
+      hipKameezController = TextEditingController(),
+      gheraKameezController = TextEditingController(),
+      baajuKameezController = TextEditingController(),
+      baajuMoriKameezController = TextEditingController(),
+      armolKameezController = TextEditingController(),
+      neckFrontKameezController = TextEditingController(),
+      neckBackKameezController = TextEditingController(),
+      lengthSalwarController = TextEditingController(),
+      moriSalwarController = TextEditingController(),
+      beltSalwarController = TextEditingController(),
+      lengthPantController = TextEditingController(),
+      moriPantController = TextEditingController(),
+      kneePantController = TextEditingController(),
+      thighPantController = TextEditingController(),
+      kamarPantController = TextEditingController(),
+      beltPantController = TextEditingController(),
+      chainPantController = TextEditingController(),
+      pocketsPantController = TextEditingController();
   @override
   void dispose() {
     for (int i = 0; i < kameezControllers.length; i++) {
@@ -334,42 +496,42 @@ class _AddMeasurementState extends State<AddMeasurement> {
   }
 }
 
-class BuildInputBox extends StatefulWidget {
-  const BuildInputBox({
-    Key key,
-    this.part,
-    this.controller,
-  }) : super(key: key);
-  final String part;
-  final TextEditingController controller;
+// class BuildInputBox extends StatefulWidget {
+//   const BuildInputBox({
+//     Key key,
+//     this.part,
+//     this.controller,
+//   }) : super(key: key);
+//   final String part;
+//   final TextEditingController controller;
 
-  @override
-  _BuildInputBoxState createState() => _BuildInputBoxState();
-}
+//   @override
+//   _BuildInputBoxState createState() => _BuildInputBoxState();
+// }
 
-class _BuildInputBoxState extends State<BuildInputBox> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        // Text(widget.part),
-        Container(
-          padding: EdgeInsets.all(8),
-          width: MediaQuery.of(context).size.width - 30,
-          child: TextFormField(
-            controller: widget.controller,
-            decoration: InputDecoration(
-              labelText: widget.part,
-              fillColor: Colors.white,
-              border: new OutlineInputBorder(
-                borderRadius: new BorderRadius.circular(25.0),
-                borderSide: new BorderSide(),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+// class _BuildInputBoxState extends State<BuildInputBox> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: <Widget>[
+//         // Text(widget.part),
+//         Container(
+//           padding: EdgeInsets.all(8),
+//           width: MediaQuery.of(context).size.width - 30,
+//           child: TextFormField(
+//             controller: widget.controller,
+//             decoration: InputDecoration(
+//               labelText: widget.part,
+//               fillColor: Colors.white,
+//               border: new OutlineInputBorder(
+//                 borderRadius: new BorderRadius.circular(25.0),
+//                 borderSide: new BorderSide(),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
