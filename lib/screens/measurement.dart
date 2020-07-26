@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pinch_zoom_image/pinch_zoom_image.dart';
+import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:sahil_boutique/models/size_model.dart';
 import 'package:sahil_boutique/screens/add_measurement.dart';
 
