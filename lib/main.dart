@@ -1,6 +1,8 @@
+import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/add_measurement.dart';
+import 'screens/measurement.dart';
 import 'widgets/customer_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import './models/size_model.dart';
@@ -33,7 +35,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool _isSearch = false;
   bool _isLoading = true;
   final usersRef = Firestore.instance.collection('customers');
 
@@ -68,55 +69,71 @@ class _MyHomePageState extends State<MyHomePage> {
     //   // customers.add(doc.data.keys.first);
     // });
     print(customers);
+    searchResults = customers;
     setState(() {
       _isLoading = false;
     });
   }
 
+  List<String> searchResults = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: !_isSearch
-            ? Text(widget.title)
-            : TextFormField(
-                controller: _searchController,
-                onChanged: (String tag){
-                  
-                },
-
-              ),
-        actions: _isSearch
-            ? <Widget>[
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isSearch = false;
-                    });
-                  },
-                  icon: Icon(Icons.clear),
-                ),
-              ]
-            : <Widget>[
-                IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    setState(() {
-                      _isSearch = true;
-                    });
-                  },
-                ),
-              ],
-      ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: () async {
-                await getCustomers();
-              },
-              child: CustomerList(
-                customers: customers,
-                customerData: customerData,
+          : Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: FloatingSearchBar.builder(
+                pinned: true,
+                controller: _searchController,
+                itemCount: searchResults.length,
+                // padding: EdgeInsets.all(0),
+                itemBuilder: (context, i) => ListTile(
+                  title: Text(
+                    searchResults[i],
+                    // style:
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MeasurementScreen(
+                              name: customers[i],
+                              customerData: customerData,
+                            )));
+                  },
+                ),
+                leading: Icon(
+                  Icons.search,
+                  // color:
+                ),
+                trailing: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        // color:
+                      ),
+                      onPressed: () {
+                        _searchController.clear();
+                        searchResults = [];
+                        searchResults = customers;
+                        setState(() {});
+                      }),
+                ),
+                onChanged: (String value) async {
+                  if (value == '') {
+                    searchResults = customers;
+                  } else
+                    searchResults = customers.where((test) {
+                      return test.toLowerCase().contains(value.toLowerCase());
+                    }).toList();
+                  print(searchResults);
+                  setState(() {});
+                },
+
+                decoration: InputDecoration.collapsed(
+                  hintText: "Search",
+                ),
               ),
             ),
       floatingActionButton: FloatingActionButton.extended(
