@@ -48,29 +48,70 @@ class _AddMeasurementState extends State<AddMeasurement> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text("Name"),
-                    TextFormField(),
-                    Text("Description"),
-                    TextFormField(),
+                    Text("Enter Customer Details"),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: "Name",
+                          fillColor: Colors.white,
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(25.0),
+                            borderSide: new BorderSide(),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          labelText: "Description",
+                          fillColor: Colors.white,
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(25.0),
+                            borderSide: new BorderSide(),
+                          ),
+                        ),
+                      ),
+                    ),
                     //
                     //
                     //
                     _image == null
-                        ? Text('No image selected.')
+                        ? Container(
+                            width: MediaQuery.of(context).size.width - 30,
+                            child: Text(
+                              'No image selected.',
+                              textAlign: TextAlign.center,
+                            ),
+                          )
                         : Image.file(_image),
-                    RaisedButton(
-                      onPressed: () {
-                        getImage();
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.add_photo_alternate,
-                          ),
-                          Text(_image == null ? 'Add Photo' : "Change Photo"),
-                        ],
+                    Container(
+                      height: 70,
+                      child: RaisedButton(
+                        onPressed: () {
+                          getImage();
+                        },
+                        color: Theme.of(context).primaryColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.camera_alt, color: Colors.white),
+                            SizedBox(width: 6),
+                            Text(
+                              _image == null ? 'Add Photo' : "Change Photo",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+                    SizedBox(height: 50),
                     //
                     //
                     //
@@ -112,12 +153,10 @@ class _AddMeasurementState extends State<AddMeasurement> {
                         part: pantParts[i],
                         controller: pantControllers[i],
                       ),
-                    Divider(),
                     //
                     //
                     //
-
-                    SizedBox(height: 100),
+                    SizedBox(height: 70),
                   ],
                 ),
               ),
@@ -236,6 +275,21 @@ class _AddMeasurementState extends State<AddMeasurement> {
       beltPantController,
       chainPantController,
       pocketsPantController;
+  @override
+  void dispose() {
+    for (int i = 0; i < kameezControllers.length; i++) {
+      kameezControllers[i].dispose();
+    }
+
+    for (int i = 0; i < salwarControllers.length; i++) {
+      salwarControllers[i].dispose();
+    }
+
+    for (int i = 0; i < pantControllers.length; i++) {
+      pantControllers[i].dispose();
+    }
+    super.dispose();
+  }
 }
 
 class BuildInputBox extends StatefulWidget {
@@ -257,11 +311,20 @@ class _BuildInputBoxState extends State<BuildInputBox> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(widget.part),
+        // Text(widget.part),
         Container(
-          width: MediaQuery.of(context).size.width / 2,
+          padding: EdgeInsets.all(8),
+          width: MediaQuery.of(context).size.width - 30,
           child: TextFormField(
             controller: widget.controller,
+            decoration: InputDecoration(
+              labelText: widget.part,
+              fillColor: Colors.white,
+              border: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(25.0),
+                borderSide: new BorderSide(),
+              ),
+            ),
           ),
         ),
       ],
