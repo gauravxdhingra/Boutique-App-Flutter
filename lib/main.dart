@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sahil_boutique/screens/add_measurement.dart';
+import 'package:sahil_boutique/screens/measurement.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,46 +36,53 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: !_isSearch
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(widget.title),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      setState(() {
-                        _isSearch = true;
-                      });
-                    },
-                  ),
-                ],
-              )
-            : Container(
-                child: Row(
+        title: !_isSearch ? Text(widget.title) : TextField(),
+        actions: _isSearch
+            ? <Widget>[
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isSearch = false;
+                    });
+                  },
+                  icon: Icon(Icons.clear),
+                ),
+              ]
+            : <Widget>[
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      _isSearch = true;
+                    });
+                  },
+                ),
+              ],
+      ),
+      body: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, i) => Container(
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => MeasurementScreen()));
+            },
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // TextFormField(
-
-                    // ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isSearch = false;
-                        });
-                      },
-                      icon: Icon(Icons.clear),
-                    ),
+                    Text('Name'),
+                    Text('Description'),
                   ],
                 ),
               ),
-      ),
-      body: Center(
-        child: ListView.builder(
-          itemBuilder: (context, i) => Container(
-            child: Text(i.toString()),
+            ),
           ),
-          itemCount: 10,
         ),
+        itemCount: 100,
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

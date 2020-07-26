@@ -11,13 +11,15 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Name'),
+      ),
       body: Container(
         child: Column(
           children: <Widget>[
             Text('Name'),
             Text('About'),
             // TODO Measurements
-            
           ],
         ),
       ),
