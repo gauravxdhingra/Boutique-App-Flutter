@@ -9,7 +9,8 @@ import 'package:sahil_boutique/models/size_model.dart';
 import 'package:image/image.dart' as im;
 
 class AddMeasurement extends StatefulWidget {
-  AddMeasurement({Key key}) : super(key: key);
+  AddMeasurement({Key key, this.customers}) : super(key: key);
+  final List<String> customers;
 
   @override
   _AddMeasurementState createState() => _AddMeasurementState();
@@ -97,17 +98,19 @@ class _AddMeasurementState extends State<AddMeasurement> {
                     //
                     //
                     //
+                    SizedBox(height: 25),
                     _image == null
                         ? Container(
                             width: MediaQuery.of(context).size.width - 30,
                             child: Text(
-                              'No image selected.',
+                              'No Image Selected !',
                               textAlign: TextAlign.center,
                             ),
                           )
                         : Image.file(_image),
+                    SizedBox(height: 10),
                     Container(
-                      height: 70,
+                      height: 50,
                       child: RaisedButton(
                         onPressed: () {
                           getImage();
@@ -117,25 +120,44 @@ class _AddMeasurementState extends State<AddMeasurement> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Icon(Icons.camera_alt, color: Colors.white),
-                            SizedBox(width: 6),
+                            SizedBox(width: 10),
                             Text(
-                              _image == null ? 'Add Photo' : "Change Photo",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _image = null;
-                                });
-                              },
-                              child: Text('Remove'),
+                              _image == null
+                                  ? 'Add Photo'.toUpperCase()
+                                  : "Change Photo".toUpperCase(),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
                             ),
                           ],
                         ),
                       ),
                     ),
+                    if (_image != null)
+                      Container(
+                        alignment: Alignment.centerRight,
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _image = null;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                'Remove',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     SizedBox(height: 50),
                     //
                     //
@@ -246,7 +268,15 @@ class _AddMeasurementState extends State<AddMeasurement> {
             bottom: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 70,
+              height: 60,
+              color: Colors.grey[300],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
               child: RaisedButton(
                 color: Theme.of(context).primaryColor,
                 onPressed: (nameController.text != "")
@@ -298,7 +328,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                           desc: descController.text,
                         );
                         await submit(size);
-                        Navigator.pop(context);
+                        // Navigator.pop(context);
 
                         Navigator.pop(context);
                       }
@@ -347,10 +377,12 @@ class _AddMeasurementState extends State<AddMeasurement> {
 
   saveInFirebase(String name, String mediaUrl) async {
     // check if user exists in users collection in database(acc to their id)
-    DocumentSnapshot doc = await usersRef.document(name).get();
+    String nameCap = name[0].toUpperCase() + name.substring(1);
+    print(nameCap);
+    DocumentSnapshot doc = await usersRef.document(nameCap).get();
     // DocumentSnapshot doc = await usersRef.document(user.id).get();
     if (!doc.exists) {
-      await usersRef.document(name).setData({
+      await usersRef.document(nameCap).setData({
         "lengthKamiz": size.lengthKamiz,
         "chestKamiz": size.chestKamiz,
         "kamarKamiz": size.kamarKamiz,
@@ -375,10 +407,33 @@ class _AddMeasurementState extends State<AddMeasurement> {
         "imageUrl": mediaUrl,
         "desc": size.desc,
       });
-      doc = await usersRef.document(name).get();
+      doc = await usersRef.document(nameCap).get();
+
+      SizeModel sizee = SizeModel.fromDocument(doc);
+      print(sizee);
+    } else {
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Name Already Exists'),
+            content: SingleChildScrollView(
+              child: Text('Try Changing The Name!'),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // return;
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
-    SizeModel sizee = SizeModel.fromDocument(doc);
-    print(sizee);
   }
 
   compressImage() async {

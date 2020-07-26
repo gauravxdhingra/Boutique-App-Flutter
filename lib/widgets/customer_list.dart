@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../screens/measurement.dart';
+import 'package:sahil_boutique/models/size_model.dart';
 
 class CustomerList extends StatelessWidget {
   const CustomerList({
     Key key,
     this.customers,
+    this.customerData,
   }) : super(key: key);
 
   final List<String> customers;
+  final Map<String, SizeModel> customerData;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +29,7 @@ class CustomerList extends StatelessWidget {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => MeasurementScreen(
                             name: customers[i],
+                            customerData: customerData,
                           )));
                 },
                 child: Padding(
